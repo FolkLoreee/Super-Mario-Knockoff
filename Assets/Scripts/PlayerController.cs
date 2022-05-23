@@ -1,9 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    public Transform enemyLocation;
+    public Text scoreText;
+    private int score = 0;
+    private bool countScoreState = false;
     private SpriteRenderer marioSprite;
     private bool onGroundState = true;
     private bool isFacingRight = true;
@@ -34,6 +40,15 @@ public class PlayerController : MonoBehaviour
             isFacingRight = true;
             marioSprite.flipX = false;
         }
+        if (!onGroundState && countScoreState)
+        {
+            if (Mathf.Abs(transform.position.x - enemyLocation.position.x) < 0.5f)
+            {
+                score++;
+                countScoreState = false;
+                scoreText.text = score.ToString();
+            }
+        }
     }
 
     //physics updates are handled within this function
@@ -50,13 +65,19 @@ public class PlayerController : MonoBehaviour
         }
         if (Input.GetKeyUp("a") || Input.GetKeyUp("d"))
         {
-            marioBody.velocity = Vector2.zero;
+            Vector2 newVelocity = marioBody.velocity;
+            if (onGroundState)
+            {
+                newVelocity.x = 0;
+            }
+            marioBody.velocity = newVelocity;
         }
         //if spacebar then jump
         if (Input.GetKeyDown("space") && onGroundState)
         {
             marioBody.AddForce(Vector2.up * jumpSpeed, ForceMode2D.Impulse);
             onGroundState = false;
+            countScoreState = true;
         }
     }
     void OnCollisionEnter2D(Collision2D col)
@@ -64,13 +85,16 @@ public class PlayerController : MonoBehaviour
         if (col.gameObject.CompareTag("Ground"))
         {
             onGroundState = true;
+            countScoreState = false;
         }
     }
     void OnTriggerEnter2D(Collider2D col)
     {
         if (col.gameObject.CompareTag("Enemy"))
         {
-            Debug.Log("OMONA");
+            // Time.timeScale = 0.0f;
+            SceneManager.LoadScene("MarioScene");
+
         }
     }
 }
