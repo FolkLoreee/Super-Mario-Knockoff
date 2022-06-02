@@ -7,15 +7,14 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     public Transform enemyLocation;
-    public Text scoreText;
-    private int score = 0;
-    private bool countScoreState = false;
+    private Animator marioAnimator;
+    private AudioSource marioAudio;
     private SpriteRenderer marioSprite;
     private bool onGroundState = true;
     private bool isFacingRight = true;
     public float speed;
     public float jumpSpeed;
-    public const float maxSpeed = 30;
+    public const float maxSpeed = 50;
     private Rigidbody2D marioBody;
     // Start is called before the first frame update
     void Start()
@@ -24,31 +23,31 @@ public class PlayerController : MonoBehaviour
         Application.targetFrameRate = 30;
         marioBody = GetComponent<Rigidbody2D>();
         marioSprite = GetComponent<SpriteRenderer>();
+        marioAnimator = GetComponent<Animator>();
+        marioAudio = GetComponent<AudioSource>();
     }
     //non-physics updates are handled within this function
     void Update()
     {
-        //TODO: Add walking animation
-        //TODO: Add jumping animation
         if (Input.GetKeyDown("a") && isFacingRight)
         {
+            if (Mathf.Abs(marioBody.velocity.x) > 1.0)
+            {
+                marioAnimator.SetTrigger("onSkid");
+            }
             isFacingRight = false;
             marioSprite.flipX = true;
         }
         if (Input.GetKeyDown("d") && !isFacingRight)
         {
+            if (Mathf.Abs(marioBody.velocity.x) > 1.0)
+            {
+                marioAnimator.SetTrigger("onSkid");
+            }
             isFacingRight = true;
             marioSprite.flipX = false;
         }
-        if (!onGroundState && countScoreState)
-        {
-            if (Mathf.Abs(transform.position.x - enemyLocation.position.x) < 0.5f)
-            {
-                score++;
-                countScoreState = false;
-                scoreText.text = score.ToString();
-            }
-        }
+        marioAnimator.SetFloat("xSpeed", Mathf.Abs(marioBody.velocity.x));
     }
 
     //physics updates are handled within this function
@@ -77,15 +76,15 @@ public class PlayerController : MonoBehaviour
         {
             marioBody.AddForce(Vector2.up * jumpSpeed, ForceMode2D.Impulse);
             onGroundState = false;
-            countScoreState = true;
+            marioAnimator.SetBool("onGround", onGroundState);
         }
     }
     void OnCollisionEnter2D(Collision2D col)
     {
-        if (col.gameObject.CompareTag("Ground"))
+        if (!col.gameObject.CompareTag("Enemy"))
         {
             onGroundState = true;
-            countScoreState = false;
+            marioAnimator.SetBool("onGround", onGroundState);
         }
     }
     void OnTriggerEnter2D(Collider2D col)
@@ -96,5 +95,13 @@ public class PlayerController : MonoBehaviour
             SceneManager.LoadScene("MarioScene");
 
         }
+    }
+    void PlayJumpSound()
+    {
+        marioAudio.PlayOneShot(marioAudio.clip);
+    }
+    private void someFunction()
+    {
+        Debug.Log("hello");
     }
 }

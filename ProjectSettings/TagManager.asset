@@ -6,6 +6,9 @@ TagManager:
   tags:
   - Ground
   - Enemy
+  - Blocks
+  - Consumables
+  - Obstructions
   layers:
   - Default
   - TransparentFX
@@ -13,9 +16,9 @@ TagManager:
   - 
   - Water
   - UI
-  - 
-  - 
-  - 
+  - QuestionBox
+  - Blocks
+  - Spawned
   - 
   - 
   - 
@@ -40,6 +43,9 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: Background
+    uniqueID: 311070929
+    locked: 0
   - name: Default
     uniqueID: 0
     locked: 0
