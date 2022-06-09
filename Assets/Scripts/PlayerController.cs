@@ -9,9 +9,11 @@ public class PlayerController : MonoBehaviour
     public Transform enemyLocation;
     private Animator marioAnimator;
     private AudioSource marioAudio;
+
     private SpriteRenderer marioSprite;
     private bool onGroundState = true;
     private bool isFacingRight = true;
+    public ParticleSystem dustCloud;
     public float speed;
     public float jumpSpeed;
     public const float maxSpeed = 50;
@@ -85,6 +87,7 @@ public class PlayerController : MonoBehaviour
         {
             onGroundState = true;
             marioAnimator.SetBool("onGround", onGroundState);
+            dustCloud.Play();
         }
     }
     void OnTriggerEnter2D(Collider2D col)
