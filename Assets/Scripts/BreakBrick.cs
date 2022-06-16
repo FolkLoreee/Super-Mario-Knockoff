@@ -6,10 +6,12 @@ public class BreakBrick : MonoBehaviour
 {
     private bool isBroken = false;
     public GameObject debrisPrefab;
+    private AudioSource audioSource;
+
     // Start is called before the first frame update
     void Start()
     {
-
+        audioSource = GetComponentInParent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -22,6 +24,9 @@ public class BreakBrick : MonoBehaviour
         if (col.gameObject.CompareTag("Player") && !isBroken)
         {
             isBroken = true;
+            CentralManager.centralManagerInstance.increaseScore(ObjectType.goombaEnemy);
+            audioSource.Play();
+
 
             for (int x = 0; x < 5; x++)
             {

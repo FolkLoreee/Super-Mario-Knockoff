@@ -9,6 +9,7 @@ public class MushroomController : MonoBehaviour
     private Vector2 velocity;
     private int moveRight;
     private Rigidbody2D mushroomBody;
+    bool collected;
     // Start is called before the first frame update
     void Start()
     {
@@ -47,7 +48,7 @@ public class MushroomController : MonoBehaviour
     }
     void OnBecameInvisible()
     {
-        Destroy(gameObject);
+        // Destroy(gameObject);
     }
 
 }

@@ -47,7 +47,7 @@ public class QuestionBoxController : MonoBehaviour
         spriteRenderer.sprite = disabledQuestionBox;
         rigidBody.bodyType = RigidbodyType2D.Static;
         //TODO: remove the bounciness property
-        rigidBody.sharedMaterial.bounciness = 0;
+        // rigidBody.sharedMaterial.bounciness = 0;
 
         //resets box position
         this.transform.localPosition = Vector3.zero;
